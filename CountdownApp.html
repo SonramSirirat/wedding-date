@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-2xl bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-700">
+        <h1 class="text-4xl sm:text-5xl font-bold text-center mb-6">Countdown Timer</h1>
+        <p class="text-center text-gray-400 mb-8">Set a date and time for your countdown and it will persist across sessions.</p>
+
+        <!-- Input and Control Section -->
+        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+            <div class="w-full sm:w-auto">
+                <input type="datetime-local" id="target-date" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300">
+            </div>
+            <div class="flex space-x-4 w-full sm:w-auto">
+                <button id="start-btn" class="w-full sm:w-auto px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">
+                    Start
+                </button>
+                <button id="reset-btn" class="w-full sm:w-auto px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">
+                    Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Countdown Display Section -->
+        <div id="countdown-display" class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+            <!-- Days -->
+            <div class="bg-gray-700 p-4 rounded-xl shadow-inner">
+                <div id="days" class="text-5xl font-extrabold text-purple-400">0</div>
+                <div class="text-sm uppercase text-gray-400 font-medium mt-2">Days</div>
+            </div>
+            <!-- Hours -->
+            <div class="bg-gray-700 p-4 rounded-xl shadow-inner">
+                <div id="hours" class="text-5xl font-extrabold text-purple-400">0</div>
+                <div class="text-sm uppercase text-gray-400 font-medium mt-2">Hours</div>
+            </div>
+            <!-- Minutes -->
+            <div class="bg-gray-700 p-4 rounded-xl shadow-inner">
+                <div id="minutes" class="text-5xl font-extrabold text-purple-400">0</div>
+                <div class="text-sm uppercase text-gray-400 font-medium mt-2">Minutes</div>
+            </div>
+            <!-- Seconds -->
+            <div class="bg-gray-700 p-4 rounded-xl shadow-inner">
+                <div id="seconds" class="text-5xl font-extrabold text-purple-400">0</div>
+                <div class="text-sm uppercase text-gray-400 font-medium mt-2">Seconds</div>
+            </div>
+        </div>
+        
+        <!-- Message Display -->
+        <div id="message" class="text-center mt-8 text-xl font-medium text-gray-300"></div>
+    </div>
+
+    <script>
+        const targetDateInput = document.getElementById('target-date');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        const messageEl = document.getElementById('message');
+
+        let countdownInterval;
+
+        // Function to update the countdown
+        function updateCountdown(targetDate) {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Calculations for days, hours, minutes, and seconds
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the result
+            if (distance > 0) {
+                daysEl.textContent = days;
+                hoursEl.textContent = hours;
+                minutesEl.textContent = minutes;
+                secondsEl.textContent = seconds;
+                messageEl.textContent = '';
+            } else {
+                // If the countdown is finished
+                clearInterval(countdownInterval);
+                daysEl.textContent = '0';
+                hoursEl.textContent = '0';
+                minutesEl.textContent = '0';
+                secondsEl.textContent = '0';
+                messageEl.textContent = 'The countdown has finished!';
+            }
+        }
+
+        // Event listener for the start button
+        startBtn.addEventListener('click', () => {
+            const targetDate = new Date(targetDateInput.value);
+
+            if (isNaN(targetDate.getTime())) {
+                messageEl.textContent = 'Please enter a valid date and time.';
+                return;
+            }
+
+            // Store the target date in local storage
+            localStorage.setItem('countdownTargetDate', targetDate.toISOString());
+
+            // Clear any existing countdown
+            clearInterval(countdownInterval);
+
+            // Start the new countdown
+            updateCountdown(targetDate);
+            countdownInterval = setInterval(() => {
+                updateCountdown(targetDate);
+            }, 1000);
+        });
+
+        // Event listener for the reset button
+        resetBtn.addEventListener('click', () => {
+            clearInterval(countdownInterval);
+            localStorage.removeItem('countdownTargetDate');
+            daysEl.textContent = '0';
+            hoursEl.textContent = '0';
+            minutesEl.textContent = '0';
+            secondsEl.textContent = '0';
+            targetDateInput.value = '';
+            messageEl.textContent = 'Countdown has been reset.';
+        });
+
+        // Check for an existing countdown on page load
+        window.addEventListener('load', () => {
+            const storedDate = localStorage.getItem('countdownTargetDate');
+            if (storedDate) {
+                const targetDate = new Date(storedDate);
+                targetDateInput.value = targetDate.toISOString().slice(0, 16); // Set input value
+                updateCountdown(targetDate);
+                countdownInterval = setInterval(() => {
+                    updateCountdown(targetDate);
+                }, 1000);
+            }
+        });
+
+    </script>
+</body>
+</html>
