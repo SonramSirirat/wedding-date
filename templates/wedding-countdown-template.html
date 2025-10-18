@@ -1,0 +1,53 @@
+<div
+  class="container bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-700"
+>
+  <h1 class="text-4xl sm:text-5xl font-bold text-center mb-6">
+    Ning and Pok Wedding
+  </h1>
+  <p class="text-center text-gray-400 mb-8">
+    Set a date and time for your countdown and it will persist across sessions.
+  </p>
+
+  <div
+    class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8"
+  >
+    <div class="w-full sm:w-auto">
+      <input type="datetime-local" id="target-date" class="input-field" />
+    </div>
+    <div class="flex space-x-4 w-full sm:w-auto">
+      <button id="start-btn" class="button-base start-btn">Start</button>
+      <button id="reset-btn" class="button-base reset-btn">Reset</button>
+    </div>
+  </div>
+
+  <div
+    id="countdown-display"
+    class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center"
+  >
+    <div class="bg-gray-700 p-4 rounded-xl shadow-inner">
+      <div id="days" class="text-5xl font-extrabold text-purple-400">0</div>
+      <div class="text-sm uppercase text-gray-400 font-medium mt-2">Days</div>
+    </div>
+    <div class="bg-gray-700 p-4 rounded-xl shadow-inner">
+      <div id="hours" class="text-5xl font-extrabold text-purple-400">0</div>
+      <div class="text-sm uppercase text-gray-400 font-medium mt-2">Hours</div>
+    </div>
+    <div class="bg-gray-700 p-4 rounded-xl shadow-inner">
+      <div id="minutes" class="text-5xl font-extrabold text-purple-400">0</div>
+      <div class="text-sm uppercase text-gray-400 font-medium mt-2">
+        Minutes
+      </div>
+    </div>
+    <div class="bg-gray-700 p-4 rounded-xl shadow-inner">
+      <div id="seconds" class="text-5xl font-extrabold text-purple-400">0</div>
+      <div class="text-sm uppercase text-gray-400 font-medium mt-2">
+        Seconds
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="message"
+    class="text-center mt-8 text-xl font-medium text-gray-300"
+  ></div>
+</div>

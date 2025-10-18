@@ -1,0 +1,63 @@
+/* css/wedding-countdown.css */
+
+/* Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+/* Base style for the custom element itself (the :host) */
+wedding-countdown {
+    /* These styles replace the ones on the <body> in index.html,
+       making the component responsible for its own centering/layout */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+/* Base font for the component */
+.container {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Replicated styles from the original <style> block to maintain appearance
+   Note: Tailwind classes (like bg-gray-900) are intentionally kept on the HTML elements */
+
+.input-field {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #374151; /* bg-gray-700 */
+    color: #e5e7eb; /* text-gray-200 */
+    border: 1px solid #4b5563; /* border border-gray-600 */
+    transition: all 300ms;
+}
+.input-field:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #a855f7; /* focus:ring-2 focus:ring-purple-500 */
+}
+.start-btn {
+    background-color: #9333ea; /* bg-purple-600 */
+}
+.start-btn:hover {
+    background-color: #7e22ce; /* hover:bg-purple-700 */
+}
+.reset-btn {
+    background-color: #dc2626; /* bg-red-600 */
+}
+.reset-btn:hover {
+    background-color: #b91c1c; /* hover:bg-red-700 */
+}
+.button-base {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    transition: all 300ms;
+    transform: scale(1);
+    cursor: pointer;
+}
+.button-base:hover {
+    transform: scale(1.05);
+}
