@@ -7,48 +7,47 @@ class WeddingCountdown extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' }); 
         this.countdownInterval = null;
-        // Flag to prevent double initialization
-        this.isInitialized = false; 
     }
 
     connectedCallback() {
-        if (!this.isInitialized) {
-            this.loadTemplateAndInitialize();
+        // 1. Get the template content from the main document
+        const template = document.getElementById('wedding-countdown-template');
+        if (!template) {
+            this.shadowRoot.innerHTML = '<p style="color: red;">Error: Component template not loaded.</p>';
+            console.error('Template element with ID "wedding-countdown-template" not found.');
+            return;
         }
+
+        // 2. Clone the template content
+        const content = template.content.cloneNode(true);
+
+        // 3. INJECT STYLES INTO SHADOW DOM FOR TAILWIND AND CUSTOM CSS
+
+        // A. Inject Tailwind CDN link
+        const tailwindLink = document.createElement('script');
+        tailwindLink.src = 'https://cdn.tailwindcss.com';
+        this.shadowRoot.appendChild(tailwindLink);
+        
+        // B. Inject custom CSS link (for font and base rules)
+        const customCssLink = document.createElement('link');
+        customCssLink.rel = 'stylesheet';
+        // Use the relative path to the CSS file
+        customCssLink.href = 'css/wedding-countdown.css'; 
+        this.shadowRoot.appendChild(customCssLink);
+
+        // 4. Append the HTML content after the styles
+        this.shadowRoot.appendChild(content);
+
+        this.initializeElements();
+        this.addEventListeners();
+        this.loadExistingCountdown();
     }
 
     disconnectedCallback() {
         clearInterval(this.countdownInterval);
     }
-
-    async loadTemplateAndInitialize() {
-        try {
-            // Fetch the external HTML template
-            const response = await fetch('templates/wedding-countdown-template.html');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const templateHtml = await response.text();
-
-            // Create a <template> element on the fly to hold the fetched content
-            const template = document.createElement('template');
-            template.innerHTML = templateHtml;
-            
-            // Append a clone of the content to the Shadow DOM
-            this.shadowRoot.appendChild(template.content.cloneNode(true));
-
-            this.initializeElements();
-            this.addEventListeners();
-            this.loadExistingCountdown();
-            this.isInitialized = true;
-
-        } catch (error) {
-            console.error('Error loading component template:', error);
-            this.shadowRoot.innerHTML = '<p style="color: red;">Error: Could not load component template.</p>';
-        }
-    }
-
-    // --- Component Logic Methods ---
+    
+    // ... (All other JavaScript methods remain the same) ...
 
     initializeElements() {
         this.targetDateInput = this.shadowRoot.getElementById('target-date');
